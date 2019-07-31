@@ -2,6 +2,7 @@ import React from "react"
 import { createStore } from "redux"
 
 const Redux = () => {
+    //ACTION GENERATORS
     const incrementCount = ({ incrementBy = 1 } = {}) => ({
         type: "INCREMENT",
         incrementBy,
@@ -21,7 +22,8 @@ const Redux = () => {
         type: "RESET",
     })
 
-    const store = createStore((state = { count: 0 }, action) => {
+    //REDUCERS
+    const countReducer = (state = { count: 0 }, action) => {
         switch (action.type) {
             case "INCREMENT":
                 return {
@@ -42,7 +44,8 @@ const Redux = () => {
             default:
                 return state
         }
-    })
+    }
+    const store = createStore(countReducer)
 
     const unsubscribe = store.subscribe(() => {
         console.log(store.getState())
