@@ -129,15 +129,28 @@ const ReduxExpensify = () => {
         expenses,
         { text, sortBy, startDate, endDate }
     ) => {
-        return expenses.filter((expense) => {
-            const startDateMatch =
-                typeof startDate !== "number" || expense.createdAt >= startDate
-            const endDateMatch =
-                typeof endDate !== "number" || expense.createdAt <= endDate
-            const textMatch = true
+        return expenses
+            .filter((expense) => {
+                const startDateMatch =
+                    typeof startDate !== "number" ||
+                    expense.createdAt >= startDate
 
-            return startDateMatch && endDateMatch && textMatch
-        })
+                const endDateMatch =
+                    typeof endDate !== "number" || expense.createdAt <= endDate
+
+                const textMatch = expense.description
+                    .toLowerCase()
+                    .includes(text.toLowerCase())
+
+                return startDateMatch && endDateMatch && textMatch
+            })
+            .sort((a, b) => {
+                if (sortBy === "date") {
+                    return a.createdAt < b.createdAt ? 1 : -1
+                } else if (sortBy === "amount") {
+                    return a.amount > b.amount ? -1 : 1
+                }
+            })
     }
 
     //STORE
@@ -161,7 +174,7 @@ const ReduxExpensify = () => {
         addExpense({
             description: "Rent",
             amount: 100,
-            createdAt: 1000,
+            createdAt: -21000,
         })
     )
     const expenseTwo = store.dispatch(
@@ -176,10 +189,10 @@ const ReduxExpensify = () => {
 
     // store.dispatch(editExpense(expenseTwo.expense.id, { amount: 500 }))
 
-    store.dispatch(setTextFilter("rent"))
+    // store.dispatch(setTextFilter("rent"))
     // store.dispatch(setTextFilter())
 
-    // store.dispatch(sortByAmount())
+    store.dispatch(sortByAmount())
     // store.dispatch(sortByDate())
 
     // store.dispatch(setStartDate(0))
