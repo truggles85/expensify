@@ -1,12 +1,33 @@
 import React from "react"
 import ReactDOM from "react-dom"
 
-// import AppRouter from "./routers/AppRouter"
-// import Redux from "./playground/redux-101"
-import ReduxExpensify from "./playground/redux-expensify"
-// import Destructuring from "./playground/destructuring"
+import AppRouter from "./routers/AppRouter"
+import configureStore from "./store/configureStore"
+import { addExpense } from "./actions/expenses"
+import { setTextFilter } from "./actions/filters"
+import getVisibleExpenses from "./selectors/expenses"
 
 import "normalize.css"
 import "./styles/styles.scss"
 
-ReactDOM.render(<ReduxExpensify />, document.getElementById("root"))
+const store = configureStore()
+
+store.dispatch(
+    addExpense({
+        description: "water bill",
+    })
+)
+
+store.dispatch(
+    addExpense({
+        description: "gas bill",
+    })
+)
+
+store.dispatch(setTextFilter("water"))
+
+const state = store.getState()
+const visibleExpenses = getVisibleExpenses(state.expenses, state.filters)
+console.log(visibleExpenses)
+
+ReactDOM.render(<AppRouter />, document.getElementById("root"))
